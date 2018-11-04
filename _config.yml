@@ -16,7 +16,7 @@
 title: Kyle Cotton
 email: kylecottonkc@gmail.com
 description: Hi, I'm Kyle Cotton a first year Computer Science and Mathematics student at the Universiry of Edinburgh. Take a look at my site.
-baseurl: "/site" # the subpath of your site, e.g. /blog
+baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 ##twitter_username: jekyllrb
 github_username:  KyleCotton
