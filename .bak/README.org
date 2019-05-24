@@ -1,2 +1,0 @@
-* Kyle Cotton Website
-This is my personal website, which can be found at [[https://kylecotton.github.io/][kylecotton.github.io.]]
