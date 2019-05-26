@@ -24,7 +24,9 @@ github_username:  KyleCotton
 
 # Build settings
 markdown: kramdown
-theme: minima
+#theme: minima
+theme: jekyll-swiss
+
 plugins:
   - jekyll-feed
 
