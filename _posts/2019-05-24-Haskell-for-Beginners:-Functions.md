@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Haskell for Beginners: Functions"
-date:   2019-05-24 00:00:04 +0100
+date:   2019-05-26 00:00:04 +0100
 categories: haskell tutorial
 ---
 
