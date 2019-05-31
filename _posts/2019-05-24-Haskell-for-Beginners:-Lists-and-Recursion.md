@@ -5,7 +5,7 @@ date:   2019-05-30 00:00:07 +0100
 categories: haskell tutorial
 ---
 
-Now you know a little about _Recursion_ its time we use this knowledge for good - lets use it with a _Haskell Favourite, Lists!_
+Now you know a little about _Recursion_ its time we use this knowledge for good - lets use it with a _Haskell Favorite, Lists!_
 
 # How the list is built
 I've spoken about the *List Data Type* previously in the **Haskell for Beginners: Lists and Comprehensions** post, but we need to know a little more about them before we can apply our newly found recursive knowledge to them.
@@ -37,7 +37,7 @@ patternMatch []      = "Empty List"
 
 Above we have a nice example of pattern matching in action.
 
-Note, the `_` character matches with anything, we use this if we don't care what the actual value is, it allows for compiler optimisation. I'll give an example using the values from a pattern match a little later.
+Note, the `_` character matches with anything, we use this if we don't care what the actual value is, it allows for compiler optimization. I'll give an example using the values from a pattern match a little later.
 
 Let me now go through each pattern and describe what it means.
 - `[]` - Use this statement if the input is the empty list.
@@ -52,7 +52,7 @@ Note, we are using a _Polymorphic Type, 'a'_, we will be covering this when we g
 Note, the last line `patternMatch [] = "Empty List"`, is not strictly a pattern match, but it is required.
 
 If you omit that line and then try to evaluate, `patternMatch []` you will get an error, `Exception: Non-exhaustive patterns in function patternMatch`. 
-This means there is a **case** that we have not considered, so when Haskell try's to replace it, it doesn't know what to replace it with and has no choice but to raise an exception.
+This means there is a **case** that we have not considered, so when Haskell trys to replace it, it doesn't know what to replace it with and has no choice but to raise an exception.
 
 As you will find out, if you program in a correct _functional_ way _run time errors_ will be extremely rare.
 
@@ -148,7 +148,7 @@ squareProdRec (x:xs) = x^2 * squareProdRec xs
   - Now the recursive step, we have two cases, the `Char` is a letter and it is not a letter. We will have to use guards.
     - If the `Char` is a letter (`isLetter` returns `True`), then we apply the `toLower` function, add it to the resulting list and continue with the rest of the list until we reach the empty list, out base case.
 	- If the `isLetter` returns `False` we ignore it and continue with the rest of the list.
-  - So the final list comprehension becomes
+  - So the final function becomes
 
 ```
 import Data.Char
@@ -163,5 +163,5 @@ lowerLetterRec (x:xs) | isLetter x = toLower x : lowerLetterRec xs
 
 Well there you have it another way of messing with lists. 
 Isn't recursion in Haskell great!
-In the next post we will be covering one of my favourite topics, **Haskell for Beginners: High Order Functions**.
+In the next post we will be covering one of my favorite topics, **Haskell for Beginners: High Order Functions**.
 See you in the next post, Kyle out!
