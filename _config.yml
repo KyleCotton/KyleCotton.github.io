@@ -27,9 +27,6 @@ markdown: kramdown
 #theme: minima
 theme: jekyll-swiss
 
-# Google Anal
-google_analytics: UA-141187941-1
-
 plugins:
   - jekyll-feed
 
