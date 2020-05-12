@@ -40,7 +40,7 @@ then
     echo "Failed to add new files"; exit 1;
 fi
 
-git commit -m $1 -m $2
+git commit -m "Updated Site"
 if [ $? -ne 0 ]
 then
     echo "Failed to commit new files"; exit 1;
