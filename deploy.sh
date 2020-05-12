@@ -33,3 +33,27 @@ if [ $? -ne 0 ]
 then
     echo "Failed to copy new files"; exit 1;
 fi
+
+git add -A
+if [ $? -ne 0 ]
+then
+    echo "Failed to add new files"; exit 1;
+fi
+
+git commit -m $1 -m $2
+if [ $? -ne 0 ]
+then
+    echo "Failed to commit new files"; exit 1;
+fi
+
+git push
+if [ $? -ne 0 ]
+then
+    echo "Failed to push new commit"; exit 1;
+fi
+
+rm -rf ~/workspace/public
+if [ $? -ne 0 ]
+then
+    echo "Failed to remove temp public"; exit 1;
+fi
