@@ -57,3 +57,9 @@ if [ $? -ne 0 ]
 then
     echo "Failed to remove temp public"; exit 1;
 fi
+
+git checkout source
+if [ $? -ne 0 ]
+then
+    echo "Failed to checkout source branch"; exit 1;
+fi
