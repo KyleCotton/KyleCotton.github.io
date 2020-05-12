@@ -4,7 +4,7 @@
         <link>https://kylecotton.github.io/tags/tutorial/</link>
         <description>Tutorial - Tag - Kyle Cotton</description>
         <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>kylecottonkc@gmail.com (Kyle Cotton)</managingEditor>
-            <webMaster>kylecottonkc@gmail.com (Kyle Cotton)</webMaster><lastBuildDate>Thu, 30 May 2019 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://kylecotton.github.io/tags/tutorial/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>kylecottonkc@gmail.com (Kyle Cotton)</webMaster><lastBuildDate>Fri, 31 May 2019 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://kylecotton.github.io/tags/tutorial/" rel="self" type="application/rss+xml" /><item>
     <title>An Introduction to Haskell</title>
     <link>https://kylecotton.github.io/an-introduction-to-haskell/</link>
     <pubDate>Fri, 24 May 2019 00:00:00 &#43;0000</pubDate>
@@ -850,6 +850,520 @@ I will also take you through my thought process as I come up with a solution.</p
 Isn&rsquo;t recursion in Haskell great!
 In the next post we will be covering one of my favorite topics, <strong><strong>Haskell for Beginners: High Order Functions</strong></strong>.
 See you in the next post, Kyle out!</p>
+]]></description>
+</item><item>
+    <title>High Order Functions</title>
+    <link>https://kylecotton.github.io/high-order-functions/</link>
+    <pubDate>Fri, 31 May 2019 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>https://kylecotton.github.io/high-order-functions/</guid>
+    <description><![CDATA[<p>I&rsquo;ve got a good post in store today, <strong><strong>High Order Functions</strong></strong>, one of my Haskell favourites.
+We&rsquo;ve previously covered, <strong>List Comprehensions</strong> and <strong>Recursion</strong> for getting stuff done in Haskell,
+now we will be covering a slightly more advanced topic, but one I find very cool.</p>
+<h2 id="why-so-high">Why so high?</h2>
+<p>You might be asking yourself, why these functions are so high?
+I&rsquo;ll first explain what exactly is a high order function as you may have not encountered them before.
+A high order function is a function that has an argument that is its self a function and or returns a function.
+That&rsquo;s it, simple isn&rsquo;t it. Keep reading to see a little of what we can do with them.</p>
+<h2 id="partial-function-application">Partial Function Application</h2>
+<p>Before we can get stuck into the <strong>High Order Function</strong> I&rsquo;m going to explain another Haskell favourite - <strong>Partial Function Application</strong>.
+This is where one or more of the function arguments are omitted when the function is used or applied.
+An easy way of thinking of this is that that any arguments that are passed are then embedded in the result, we the function result only requires the remaining arguments.
+As always lets have a look at I&rsquo;ll give an example of this below, this is one of the more complex examples we have looked at so far.</p>
+<p>Below you can see the function I have defined, lets look into how <strong>Partial Function Application</strong> works using this as an example.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">addSome</span> <span class="ow">::</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span>
+<span class="nf">addSome</span> <span class="n">x1</span> <span class="n">x2</span> <span class="n">x3</span> <span class="ow">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">x3</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Using <code>GHCI</code> in a terminal, we can investigate this a little more.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">addSome</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span>
+<span class="mi">6</span>
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="kr">let</span> <span class="n">x</span> <span class="ow">=</span> <span class="n">addSome</span> <span class="mi">1</span> <span class="mi">2</span>
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">x</span> <span class="mi">3</span>
+<span class="mi">6</span>
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">x</span>
+
+<span class="o">&lt;</span><span class="n">interactive</span><span class="o">&gt;:</span><span class="mi">18</span><span class="kt">:</span><span class="mi">1</span><span class="kt">:</span> <span class="ne">error</span><span class="kt">:</span>
+    <span class="err">•</span> <span class="kt">No</span> <span class="kr">instance</span> <span class="n">for</span> <span class="p">(</span><span class="kt">Show</span> <span class="p">(</span><span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span><span class="p">))</span> <span class="n">arising</span> <span class="n">from</span> <span class="n">a</span> <span class="n">use</span> <span class="kr">of</span> <span class="err">‘</span><span class="n">print</span><span class="err">’</span>
+        <span class="p">(</span><span class="n">maybe</span> <span class="n">you</span> <span class="n">haven&#39;t</span> <span class="n">applied</span> <span class="n">a</span> <span class="n">function</span> <span class="n">to</span> <span class="n">enough</span> <span class="n">arguments</span><span class="o">?</span><span class="p">)</span>
+    <span class="err">•</span> <span class="kt">In</span> <span class="n">a</span> <span class="n">stmt</span> <span class="kr">of</span> <span class="n">an</span> <span class="n">interactive</span> <span class="kt">GHCi</span> <span class="n">command</span><span class="kt">:</span> <span class="n">print</span> <span class="n">it</span>
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="kr">let</span> <span class="n">y</span> <span class="ow">=</span> <span class="n">addSome</span> <span class="mi">10</span>
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">y</span> <span class="mi">90</span> <span class="mi">100</span>
+<span class="mi">200</span>
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="kt">:</span><span class="n">t</span> <span class="n">x</span>
+<span class="nf">x</span> <span class="ow">::</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span>
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="kt">:</span><span class="n">t</span> <span class="n">y</span>
+<span class="nf">y</span> <span class="ow">::</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Int</span>
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="kt">:</span><span class="n">i</span> <span class="n">x</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>The first example is just standard way function is used; just summing the three <code>Int</code> arguments that have been passed to it.
+The second example is the first time we use <strong>Partial Function Application</strong>, here we have partially applied the first two arguments to the function.
+Notice, when we try to evaluate <code>x</code> Haskell doesn&rsquo;t know how to show it us, because it is a function, you can see this from the <strong>Type Signature</strong> <code>x :: Int -&gt; Int</code> so an error is raised, as seen above.</p>
+<h2 id="function-composition">Function Composition</h2>
+<p>Haskell has functions, it also has functions of functions and functions of functions of functions of &hellip;
+So lets look a little it how we can <span class="underline">Compose</span> functions in Haskell.</p>
+<p>To compose functions in Haskell we use the <span class="underline">Function Composition Operator</span> <code>.</code>. This may seem strange syntax at first.
+Lets look at some examples and see how we can use this to our advantage.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">powerTwo</span> <span class="ow">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="ow">=&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">a</span>
+<span class="nf">powerTwo</span>   <span class="ow">=</span> <span class="p">(</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="nf">powerThree</span> <span class="ow">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="ow">=&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">a</span>
+<span class="nf">powerThree</span> <span class="ow">=</span> <span class="p">(</span><span class="o">^</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="nf">somePower</span> <span class="ow">=</span> <span class="n">powerTwo</span> <span class="o">.</span> <span class="n">powerThree</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Above I have added some code, this is what we will be using to explore this a little further.</p>
+<p>First notice, I have not included a <strong>Type Signature</strong> for the <code>powerSix</code> function;
+the type signatures are not required however, I <strong><strong>Strongly Recommend</strong></strong> you always add one in,
+they can frequently ping up errors in the code that are due to an error in the programs logic,
+(something the computer cannot do for us).</p>
+<p>Now you can see that we have composed the functions: <code>powerTwo</code> and <code>powerThree</code>.
+Take a minute to think of what the result of this operation will be.
+Remember back to Mathematics, we apply the right most function first then move to the left,
+so in effect we have the function <code>(x^3)^2</code>.</p>
+<p>Lets try evaluating some values and see if they are what we expect.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">somePower</span>  <span class="mi">1</span>
+<span class="mi">1</span>
+<span class="c1">-- (1^3)^2 = 1</span>
+
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">somePower</span>  <span class="mi">2</span>
+<span class="mi">64</span>
+<span class="c1">-- (2^3)^2 = 64</span>
+
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">somePower</span>  <span class="mi">3</span>
+<span class="mi">729</span>
+<span class="c1">-- (3^3)^2 = 729</span>
+
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">somePower</span>  <span class="mi">4</span>
+<span class="mi">4096</span>
+<span class="c1">-- (4^3)^2 = 4096</span>
+
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">somePower</span>  <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="mi">1</span>
+<span class="c1">-- ((-1)^3)^2 = 1</span>
+
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">somePower</span>  <span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">)</span>
+<span class="mi">1000000</span>
+<span class="c1">-- ((-10)^3)^2 = 1000000</span>
+
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">somePower</span>  <span class="s">&#34;Hello, World!&#34;</span>
+<span class="o">&lt;</span><span class="n">interactive</span><span class="o">&gt;:</span><span class="mi">99</span><span class="kt">:</span><span class="mi">11</span><span class="kt">:</span> <span class="ne">error</span><span class="kt">:</span>
+    <span class="err">•</span> <span class="kt">Couldn&#39;t</span> <span class="n">match</span> <span class="n">expected</span> <span class="kr">type</span> <span class="err">‘</span><span class="kt">Integer</span><span class="err">’</span> <span class="n">with</span> <span class="n">actual</span> <span class="kr">type</span> <span class="err">‘</span><span class="p">[</span><span class="kt">Char</span><span class="p">]</span><span class="err">’</span>
+    <span class="err">•</span> <span class="kt">In</span> <span class="n">the</span> <span class="n">first</span> <span class="n">argument</span> <span class="kr">of</span> <span class="err">‘</span><span class="n">somePower</span><span class="err">’</span><span class="p">,</span> <span class="n">namely</span> <span class="err">‘</span><span class="s">&#34;Hello, World!&#34;</span><span class="err">’</span>
+      <span class="kt">In</span> <span class="n">the</span> <span class="n">expression</span><span class="kt">:</span> <span class="n">somePower</span> <span class="s">&#34;Hello, World!&#34;</span>
+      <span class="kt">In</span> <span class="n">an</span> <span class="n">equation</span> <span class="n">for</span> <span class="err">‘</span><span class="n">it</span><span class="err">’</span><span class="kt">:</span> <span class="n">it</span> <span class="ow">=</span> <span class="n">somePower</span> <span class="s">&#34;Hello, World!&#34;</span>
+
+<span class="c1">-- The inferred *Type Signature* for the ~somePower~ function does not allow</span>
+<span class="c1">--  for ~String~ types so an error is raised, as Haskell cannot handle it.</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Above I have evaluated the <code>somePower</code> function with a range of value to see the result.
+Hopefully I you know have a better understanding of how <strong>Function Composition</strong> work in Haskell
+and how we can use it.</p>
+<h2 id="filter">Filter</h2>
+<p>Now its time to get stuck into a few high order functions available in Haskell <code>Prelude</code>.
+<code>Filter</code> is the first of these functions; <code>filter :: (a -&gt; Bool) -&gt; [a] -&gt; [a]</code>,
+the filter takes a <strong>Predicate Function</strong> and a <strong>List</strong> which returns a <strong>List</strong>.
+Every item is passed to the predicate function those that evaluate to <code>True~are added, the ones that evaluate to ~False</code> are omitted.</p>
+<p>This allows us to easily <strong>filter</strong> elements from any given list.
+Lets look at an example of how we can use the filter function.</p>
+<ul>
+<li>Create a high order function that gives us all of the positive even numbers from a list.
+<ul>
+<li>Thinking about this at a <span class="underline">higher</span> level, we know we need only the positive even numbers</li>
+<li>So lets <code>filter</code> these out into our result</li>
+<li>we need a function that will return <code>True</code> when a positive even number is passed and <code>False</code> otherwise.</li>
+</ul>
+</li>
+</ul>
+<!--listend-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">predicate</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Integral</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
+<span class="nf">predicate</span> <span class="n">x</span> <span class="ow">=</span> <span class="n">even</span> <span class="n">x</span> <span class="o">&amp;&amp;</span> <span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span>
+
+<span class="nf">posEven</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Integral</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="nf">posEven</span> <span class="ow">=</span> <span class="n">filter</span> <span class="n">predicate</span>
+
+<span class="c1">---------------------------------------------</span>
+
+<span class="nf">posEvenNew</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Integral</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="nf">posEvenNew</span> <span class="ow">=</span> <span class="n">filter</span> <span class="p">(</span><span class="nf">\</span><span class="n">x</span> <span class="ow">-&gt;</span> <span class="n">even</span> <span class="n">x</span> <span class="o">&amp;&amp;</span> <span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Above you can see my solution to the problem; I have included two example solutions.
+The first is more verbose, it has a separate predicate function that is then used in the final function.
+The second example is much prettier, it uses <strong>Lambda</strong> functions, this is something we will be covering in the next post.</p>
+<p>Both functions work in a similar manner, each of the value of the lists are passed to the predicate function; whether that be the separate <code>predicate</code> function or the <strong>Lambda</strong> function <code>\x -&gt; even x &amp;&amp; x&gt;0</code>.
+If the value returns <code>True</code> it will be added to the resulting list,
+if the value returns <code>False</code> the item won&rsquo;t be added.</p>
+<p>Both examples have used a <strong>Type Class</strong> this is because there are
+restrictions that need to be placed on the types of the input.
+Looking at the types of the functions in the definition:
+<code>even :: Integral a =&gt; a -&gt; Bool</code> and <code>(&gt;) :: Ord a =&gt; a -&gt; a -&gt; Bool</code>
+from this we can see we need to add the <code>Integral</code> <strong>Type Class</strong> to our function,
+this means that the type of our input has to either be a <code>Integer</code> or <code>Int</code>.
+We don&rsquo;t need to include the the <code>Ord</code> type class as well because the <code>Integral</code> type class includes it.
+You can check this be using <code>GHCI</code>: <code>:i Ord</code>, I&rsquo;ll leave this as an exercise for the reader,
+remember we will be covering <strong>Type Classes</strong> fully later in this series.</p>
+<h2 id="map">Map</h2>
+<p>The map function has the type <code>map :: (a -&gt; b) -&gt; [a] -&gt; [b]</code>, its arguments are a function and a list.
+The function is then applied to every item in the list; you can clearly see this from the type signature.</p>
+<p>Lets run through an a few examples using the map function, I&rsquo;ll talk through them in the same way I did the in the recursion and list comprehension posts.</p>
+<ul>
+<li>Create a function that returns the square of all of the elements in a list.
+<ul>
+<li>When are using high order functions we need to think at a more logical &lsquo;higher&rsquo; level.</li>
+<li>Lets think what we have to do to each item, we have to square it.</li>
+<li>So lets map across a squaring function</li>
+<li>The final function should look something like what is noted below.</li>
+</ul>
+</li>
+</ul>
+<!--listend-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">squareHi</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Num</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="nf">squareHi</span> <span class="ow">=</span> <span class="n">map</span> <span class="p">(</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Notice the type signature; the type of the <code>^</code> operator:  <code>(^) :: (Integral b, Num a) =&gt; a -&gt; b -&gt; a</code>,
+we must add constraints to the type of our input otherwise we would get a type error, Haskell&rsquo;s favourite error.
+This is achieved by using a <strong>Type Class</strong> <code>Num a</code> again I will be covering this later.
+The <strong>Haskell Type System</strong> can also infer the type of the function however, this is not best practise - personally I always include a type signature.</p>
+<ul>
+<li>Create a function that returns the logical  <code>and</code> of a list of <code>Int</code>.</li>
+</ul>
+<p>Each item is <code>True</code> if the number is greater than <code>5</code> otherwise <code>False</code>.</p>
+<ul>
+<li>Thinking on a higher level, we know the same function (the one checking the vale) has to be applied to every value. Lets use the <code>map</code> function.</li>
+<li>The function that needs to be applied doesn&rsquo;t exist in the standard library (to the best of my knowledge) so lets create our own version of it instead.</li>
+<li>The final function and its helper could look like what is shown below.</li>
+</ul>
+<!--listend-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">greaterFive</span> <span class="ow">::</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
+<span class="nf">greaterFive</span> <span class="n">x</span> <span class="o">|</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">5</span>     <span class="ow">=</span> <span class="kt">True</span>
+              <span class="o">|</span> <span class="n">otherwise</span> <span class="ow">=</span> <span class="kt">False</span>
+
+<span class="nf">f</span> <span class="ow">::</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
+<span class="nf">f</span> <span class="ow">=</span> <span class="n">and</span> <span class="o">.</span> <span class="n">map</span> <span class="n">greaterFive</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>As always let me go through this example in a little detail, our functions are starting to get a little more advanced now.</p>
+<p>The <code>greaterFive</code> function is the one that is mapped across each of the values in the list, it is applied to each of the values in the list. This will give us a list of <code>Bool</code> values which then has the <code>and</code> function applied to them.</p>
+<p>Lets take note of the <strong>Type Signatures</strong>:
+<code>greaterFive</code>: <code>greaterFive :: Int -&gt; Bool</code>,
+<code>f</code>: <code>f :: [Int] -&gt; Bool</code>,
+<code>and</code>: <code>and :: Foldable t =&gt; t Bool -&gt; Bool</code>; for the minute you can think of <code>Foldable</code> as a <code>List</code>.</p>
+<h2 id="fold">Fold</h2>
+<p>Now its time to fold. Lets look into how we can use the <code>foldr</code> function in Haskell to write some pretty code.</p>
+<p>Let me take you back to when I first introduced the list I said <strong><strong>A list is build not made</strong></strong>.
+Every list no matter the type of the elements will have this structure <code>[1,2,3] = 1:(2:(3:[]))</code>.
+When we think about folding I like to keep this structure in the front of my mind.</p>
+<p><code>foldr</code> has the <strong>Type Signature</strong> <code>foldr :: Foldable t =&gt; (a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b</code>,
+again think of <code>Foldable</code> and <code>t a</code> both as lists.
+So the <code>foldr</code> function takes a function, a value and a list as its inputs.</p>
+<p>Lets run through an example to see how we actually use this,
+in this example we will be rewriting the <code>and</code> function.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">highAnd</span> <span class="ow">::</span> <span class="p">[</span><span class="kt">Bool</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
+<span class="nf">highAnd</span> <span class="n">xs</span> <span class="ow">=</span> <span class="n">foldr</span> <span class="p">(</span><span class="o">&amp;&amp;</span><span class="p">)</span> <span class="kt">True</span> <span class="n">xs</span>
+
+<span class="nf">foldr</span> <span class="p">(</span><span class="o">&amp;&amp;</span><span class="p">)</span> <span class="kt">True</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">]</span> <span class="ow">=</span> <span class="n">x1</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">x2</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">x3</span> <span class="o">&amp;&amp;</span> <span class="kt">True</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Above we have an example of an implementation of the <code>and</code> function and how it would be evaluated.
+Notice how similar this is to the structure of a list;
+the cons operator <code>:</code> has been replaced with a binary operator (a function taking two arguments),
+the <code>True</code> value is the identify for <strong>logical and</strong>,
+the same way that <code>0</code> is the identify for addition and subtraction
+and <code>1</code> is the identify for multiplication and division,
+the finally the list that this we will be working with.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">highAnd</span> <span class="p">[</span><span class="kt">True</span><span class="p">,</span> <span class="kt">True</span><span class="p">,</span> <span class="kt">False</span><span class="p">,</span> <span class="kt">True</span><span class="p">]</span>
+<span class="kt">False</span>
+<span class="c1">-- True &amp;&amp; (True &amp;&amp; (False &amp;&amp; (True &amp;&amp; True)))</span>
+
+<span class="kt">GHCI</span><span class="o">&gt;</span> <span class="n">highAnd</span> <span class="p">[</span><span class="kt">True</span><span class="p">,</span> <span class="kt">True</span><span class="p">,</span> <span class="kt">True</span><span class="p">,</span> <span class="kt">True</span><span class="p">]</span>
+<span class="kt">True</span>
+<span class="c1">-- True &amp;&amp; (True &amp;&amp; (False &amp;&amp; (True &amp;&amp; True)))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Above we have a few examples of the function being evaluated.
+As always lets run through some examples and I will describe how I would approach them.</p>
+<ul>
+<li>Find the product of all the numbers in a list.
+<ul>
+<li>We are thinking at a &lsquo;higher&rsquo; level in this post.</li>
+<li>We know that we want to have a single result in the end</li>
+<li>So lets <strong>fold</strong> that list up then</li>
+<li>In this example we are finding the product, lets think of the arguments to the <code>foldr</code> function</li>
+<li>Binary Operator: (*), Identity: 1</li>
+<li>The final function could look something like this</li>
+</ul>
+</li>
+</ul>
+<!--listend-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">highProd</span> <span class="ow">::</span> <span class="kt">Num</span> <span class="n">a</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">a</span>
+<span class="nf">highProd</span> <span class="ow">=</span> <span class="n">foldr</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="mi">1</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>This function folds in the multiplication operator into the list and uses <code>1</code> to be the identity fr this operation.</p>
+<h2 id="examples">Examples</h2>
+<p>I think its time we finally used all three of these together</p>
+<ul>
+<li>Create a high order function that gives us all of the positive even numbers from a list.
+<ul>
+<li>We are selecting elements from a list in this example, we are filtering certain elements.</li>
+<li>We need to also create a predicate function that evaluated to <code>True</code></li>
+</ul>
+</li>
+</ul>
+<p>for positive even numbers and <code>False</code> for the rest.</p>
+<ul>
+<li>Something like this <code>\x -&gt; even x &amp;&amp; x&gt;0</code> would work,</li>
+</ul>
+<p>more on this in the next post.</p>
+<ul>
+<li>We want the function to be able to take both</li>
+</ul>
+<p><code>Int</code> and <code>Integer</code> types so lets also add a type class.</p>
+<ul>
+<li>The final solution could look something like this.</li>
+</ul>
+<!--listend-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">a</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Integral</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="nf">a</span> <span class="ow">=</span> <span class="n">filter</span> <span class="p">(</span><span class="nf">\</span><span class="n">x</span> <span class="ow">-&gt;</span> <span class="n">even</span> <span class="n">x</span> <span class="o">&amp;&amp;</span> <span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>Create a function that returns the square of all of the elements in a list.
+<ul>
+<li>In this example we need to square all of the numbers in a list.</li>
+<li>Since we are applying a function to all of the elements lets use <code>map</code></li>
+<li>We will need to apply the square function which with</li>
+</ul>
+</li>
+</ul>
+<p><strong>Partial Function Application</strong> we can write as <code>(^2)</code></p>
+<ul>
+<li>An example solution can be seen below.</li>
+</ul>
+<!--listend-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">b</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Integral</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="nf">b</span> <span class="ow">=</span> <span class="n">map</span> <span class="p">(</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>Find the product of the square of all the numbers in a list.
+<ul>
+<li>This question is building on top of the previous.</li>
+<li>After we have squared all of the elements in the list</li>
+</ul>
+</li>
+</ul>
+<p>we now need to find their product</p>
+<ul>
+<li>We can do this by folding the list with the multiplication operator <code>*</code>.</li>
+<li>The identify for multiplication is <code>1</code> so we will also need to use that.</li>
+<li>Since we want to create a function, we will compose the <code>foldr</code> and <code>map</code></li>
+</ul>
+<p>parts of this question into a single function using the
+<strong>Function Composition Operator</strong> <code>.</code>.</p>
+<ul>
+<li>An example solution can be seen below.</li>
+</ul>
+<!--listend-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">c</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Integral</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">a</span>
+<span class="nf">c</span> <span class="ow">=</span> <span class="n">foldr</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="mi">1</span> <span class="o">.</span> <span class="n">map</span> <span class="p">(</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>Define a function that takes a <code>String</code> argument and returns a <code>String</code> containing only the letters of the input but now all lowercase.
+<ul>
+<li>In this example we need to do two things; remove all of the non-letters</li>
+</ul>
+</li>
+</ul>
+<p>and make everything lowercase</p>
+<ul>
+<li>Lets first filter out all of the letters from our <code>String</code></li>
+</ul>
+<p>this can be done be done by using the <code>isLetter</code> function
+found in the <code>Data.Char</code> library.</p>
+<ul>
+<li>We then need to make all of these characters</li>
+</ul>
+<p>(remember Haskell treats a <code>String</code> as <code>[Char]</code>, a list of characters) lowercase
+we can do this by using the <code>toLower</code> function again found in <code>Data.Char</code>.</p>
+<ul>
+<li>After we have done this we will need to compose them using the <code>.</code> operator.</li>
+<li>The final function could look something like the this.</li>
+</ul>
+<!--listend-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="kr">import</span> <span class="nn">Data.Char</span>
+
+<span class="nf">d</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
+<span class="nf">d</span> <span class="ow">=</span> <span class="n">map</span> <span class="n">toLower</span> <span class="o">.</span> <span class="n">filter</span> <span class="n">isLetter</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="conclusion">Conclusion</h2>
+<p>Finally we have looked at the main ways of getting stuff done <strong>Functionally</strong> in <strong>Haskell</strong>; recursion, list comprehension and high order functions are all ready for us to use.</p>
+<p>In the next post we will be looking at <strong><strong>Haskell for Beginners: Lambda Expressions</strong></strong>, we have used them a little in this post but I&rsquo;d like to build on them further as I think they are very cool.</p>
 ]]></description>
 </item></channel>
 </rss>
