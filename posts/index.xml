@@ -607,5 +607,265 @@ I hope this makes the recursive step easier to understand.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>This has been a <span class="underline">quick and dirty</span> introduction to <span class="underline">Recursion</span>, in the next post I will be covering how we can use this new knowledge with particular applications to list.</p>
 ]]></description>
+</item><item>
+    <title>Lists and Recursion</title>
+    <link>https://kylecotton.github.io/lists-and-recursion/</link>
+    <pubDate>Thu, 30 May 2019 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>https://kylecotton.github.io/lists-and-recursion/</guid>
+    <description><![CDATA[<p>Now you know a little about <span class="underline">Recursion</span> its time we use this knowledge for good - lets use it with a <span class="underline">Haskell Favorite, Lists!</span></p>
+<h2 id="how-the-list-is-built">How the list is built</h2>
+<p>I&rsquo;ve spoken about the <strong>List Data Type</strong> previously in the <strong><strong>Haskell for Beginners: Lists and Comprehensions</strong></strong> post, but we need to know a little more about them before we can apply our newly found recursive knowledge to them.</p>
+<p><strong><strong>A list is build not made</strong></strong>, let me explain. Every list is build using only <code>:</code>, &lsquo;cons&rsquo; and <code>[]</code> the empty list.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="c1">-- Note: This is not valid Haskell code</span>
+<span class="c1">--         only the representations as</span>
+<span class="c1">--         lists are accurate.</span>
+
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="ow">=</span> <span class="mi">1</span><span class="kt">:</span><span class="p">(</span><span class="mi">2</span><span class="kt">:</span><span class="p">(</span><span class="mi">3</span><span class="kt">:[]</span><span class="p">))</span>
+
+<span class="s">&#34;list&#34;</span>  <span class="ow">=</span> <span class="p">[</span><span class="err">’</span><span class="n">l</span><span class="err">’</span><span class="p">,</span><span class="err">’</span><span class="n">i</span><span class="err">’</span><span class="p">,</span><span class="err">’</span><span class="n">s</span><span class="err">’</span><span class="p">,</span><span class="err">’</span><span class="n">t</span><span class="err">’</span><span class="p">]</span> <span class="ow">=</span> <span class="err">’</span><span class="n">l</span><span class="err">’</span><span class="kt">:</span><span class="p">(</span><span class="err">’</span><span class="n">i</span><span class="err">’</span><span class="kt">:</span><span class="p">(</span><span class="err">’</span><span class="n">s</span><span class="err">’</span><span class="kt">:</span><span class="p">(</span><span class="err">’</span><span class="n">t</span><span class="err">’</span><span class="kt">:[]</span><span class="p">)))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>The above may look complicated, but lets go through it. A very important thing to remember for later is that the <span class="underline">Base</span> of any list is the <strong><strong>Empty List</strong></strong> <code>[]</code>.
+From here we append elements onto the list using the &lsquo;cons&rsquo; (short for construct) <code>:</code> operator.</p>
+<p>The <span class="underline">Type Signature</span> of gives a clear picture of what the operator does <code>(:) :: a -&gt; [a] -&gt; [a]</code>, if your unsure how to interpret this signature check out the <strong><strong>Haskell for Beginners: Understanding Haskell Documentation</strong></strong> post, which covers this in detail.</p>
+<h2 id="pattern-matching">Pattern Matching</h2>
+<p>The last thing we need to know is pattern matching, this allows us to split a list if it <strong>matches a pattern</strong>, lets look at an example to make things easier to understand.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">patternMatch</span> <span class="ow">::</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
+<span class="nf">patternMatch</span> <span class="p">(</span><span class="kr">_</span><span class="kt">:</span><span class="kr">_</span><span class="kt">:</span><span class="kr">_</span><span class="p">)</span> <span class="ow">=</span> <span class="s">&#34;List with at least 2 elements&#34;</span>
+<span class="nf">patternMatch</span> <span class="p">(</span><span class="kr">_</span><span class="kt">:</span><span class="kr">_</span><span class="p">)</span>   <span class="ow">=</span> <span class="s">&#34;Non-Empty List&#34;</span>
+<span class="nf">patternMatch</span> <span class="kt">[]</span>      <span class="ow">=</span> <span class="s">&#34;Empty List&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Above we have a nice example of pattern matching in action.</p>
+<p>Note, the <code>_</code> character matches with anything, we use this if we don&rsquo;t care what the actual value is, it allows for compiler optimization. I&rsquo;ll give an example using the values from a pattern match a little later.</p>
+<p>Let me now go through each pattern and describe what it means.</p>
+<ul>
+<li><code>[]</code> - Use this statement if the input is the empty list.</li>
+<li><code>(_:_)</code> - Use this statement if there is at least one element in the list. This is because the final <code>_</code> may be the empty list, but it may contain any number of elements or it could even be infinite.</li>
+<li><code>(_:_:_)</code> - This pattern is very similar to the one above, but it allows us to say this list contains at least two elements.</li>
+<li>We can pattern match any finite number of elements from a list (if you want to type out the pattern :-) ).</li>
+</ul>
+<p>I advise you copy and play about with this example, you will notice that the order of the expressions does indeed matter. Haskell will use the first available pattern that matches so if we swapped lines two and three, then this statement <code>patternMatch (_:_:_) = &quot;List with Two+ Elements&quot;</code> would be redundant.</p>
+<p>Note, we are using a <span class="underline">Polymorphic Type, &lsquo;a'</span>, we will be covering this when we go through <strong>Type Classes</strong>.</p>
+<p>Note, the last line <code>patternMatch [] = &quot;Empty List&quot;</code>, is not strictly a pattern match, but it is required.</p>
+<p>If you omit that line and then try to evaluate, <code>patternMatch []</code> you will get an error, <code>Exception: Non-exhaustive patterns in function patternMatch</code>.
+This means there is a <strong><strong>case</strong></strong> that we have not considered, so when Haskell trys to replace it, it doesn&rsquo;t know what to replace it with and has no choice but to raise an exception.</p>
+<p>As you will find out, if you program in a correct <span class="underline">functional</span> way <span class="underline">run time errors</span> will be extremely rare.</p>
+<p>Pattern matching can also be used to extract elements from a list, lets run through a quick example of how this would work.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">patternMatch</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Show</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
+<span class="nf">patternMatch</span> <span class="p">(</span><span class="n">x1</span><span class="kt">:</span><span class="n">x2</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="s">&#34;First Element: &#34;</span>     <span class="o">++</span> <span class="n">show</span> <span class="n">x1</span> <span class="o">++</span>
+                          <span class="s">&#34; Second Element: &#34;</span>   <span class="o">++</span> <span class="n">show</span> <span class="n">x2</span> <span class="o">++</span>
+                          <span class="s">&#34; Rest of the List: &#34;</span> <span class="o">++</span> <span class="n">show</span> <span class="n">xs</span>
+<span class="nf">patternMatch</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span>     <span class="ow">=</span> <span class="s">&#34;First Element: &#34;</span>     <span class="o">++</span> <span class="n">show</span> <span class="n">x</span> <span class="o">++</span>
+                          <span class="s">&#34; Rest of the List: &#34;</span> <span class="o">++</span> <span class="n">show</span> <span class="n">xs</span>
+<span class="nf">patternMatch</span> <span class="kt">[]</span>         <span class="ow">=</span> <span class="s">&#34;Empty List&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>The biggest change in this version of the code in terms of the <span class="underline">pattern matching</span> is that we have now name the elements of the pattern, where before we used <code>_</code> now we have used variables, <code>x1</code>,~x2~,~x~,~xs~ in this particular example. This allows us to extract elements from the list.</p>
+<p>In the above example I have used a new function <code>show</code>, so lets go through it.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="kr">class</span> <span class="kt">Show</span> <span class="n">a</span> <span class="kr">where</span>
+  <span class="o">...</span>
+  <span class="n">show</span> <span class="ow">::</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
+  <span class="o">...</span>
+    <span class="c1">-- Defined in ‘GHC.Show’</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Using <span class="underline">ghci</span> we get the following <span class="underline">info</span>, you know how to read this from the  <strong><strong>Haskell for Beginners: Understanding Haskell Documentation</strong></strong> post. The function takes an input of any type (that can be showed, this related to <span class="underline">Type Classes</span> which we are discussing later), and returns a <code>String</code> version of it.</p>
+<p>Here are some example of show:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="kt">Prelude</span><span class="o">&gt;</span> <span class="n">show</span> <span class="mi">4</span>
+<span class="s">&#34;4&#34;</span>
+
+<span class="kt">Prelude</span><span class="o">&gt;</span> <span class="n">show</span> <span class="kt">True</span>
+<span class="s">&#34;True&#34;</span>
+
+<span class="kt">Prelude</span><span class="o">&gt;</span> <span class="n">show</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="s">&#34;[1,2,3]&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>The <code>++</code> operator just combines two lists returning a new list.</p>
+<h2 id="examples">Examples</h2>
+<p>Now we&rsquo;ve got the background knowledge, lets run through some examples.
+I may introduce some more exciting functions as we go along.
+I will also take you through my thought process as I come up with a solution.</p>
+<ul>
+<li>Create a recursive function list that gives us all of the positive even numbers from a list.
+<ul>
+<li>When creating a recursive function, we first need to think about the base case. In this example that is the empty list, when the empty list is input the empty list should be returned.</li>
+<li>Now we need to think about the recursive step, we have to select only the even numbers so we will have to use a guard, this will be done in conjunction with a <strong>pattern match</strong>
+<ul>
+<li>If the number is a even number it must be added to the list. We must continue checking the rest of the list till we reach the empty list the base case.</li>
+<li>If the number is odd we ignore it and continue with the rest of the list.</li>
+</ul>
+</li>
+<li>So the final function could be something like below. When we use guards in functions they are represented with a pipe <code>|</code>, the otherwise statement will always be used if none of the above cases are met. You don&rsquo;t have to use the <code>otherwise</code> however, I <strong><strong>heavily recommend</strong></strong> it since it will avoid the dreaded <code>Exception: Non-exhaustive patterns in function evenList</code> error.</li>
+</ul>
+</li>
+</ul>
+<!--listend-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">evenList</span> <span class="ow">::</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span>
+<span class="nf">evenList</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">[]</span>
+<span class="nf">evenList</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="o">|</span> <span class="n">even</span> <span class="n">x</span>    <span class="ow">=</span> <span class="n">x</span> <span class="kt">:</span> <span class="n">evenList</span> <span class="n">xs</span>
+                <span class="o">|</span> <span class="n">otherwise</span> <span class="ow">=</span>     <span class="n">evenList</span> <span class="n">xs</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>Create a function that returns the square of all of the elements in a list.
+<ul>
+<li>First we always consider the base case. Again this will be the empty list, which will just return the empty list.</li>
+<li>Now we think about the recursive step
+<ul>
+<li>All we need to do for the recursive step is go through and square all of the elements until we reach the base case (the empty list).</li>
+</ul>
+</li>
+<li>So the final function could look something like this.</li>
+</ul>
+</li>
+</ul>
+<!--listend-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">squareRec</span> <span class="ow">::</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span>
+<span class="nf">squareRec</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">[]</span>
+<span class="nf">squareRec</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">x</span><span class="o">^</span><span class="mi">2</span> <span class="kt">:</span> <span class="n">squareRec</span> <span class="n">xs</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>Find the product of the square of all the numbers in a list.
+<ul>
+<li>This problem is slightly different, unlike the <span class="underline">List Comprehension</span> method where we get the list then find the product in this example it will be easier to do it all in one function.</li>
+<li>As always lets consider the base case, here when we get the empty list we must return an integer. When we get the empty list we must return <code>1</code> as this is the identity for multiplication. Just like <code>0</code> is the identity for addition.</li>
+<li>Now lets consider the recursive step.
+<ul>
+<li>We need to get the element out of the list, we can use pattern matching to do this.</li>
+<li>We then need to square this element</li>
+<li>Then we need to multiply it my the result of the rest of the list going through the same process, this is the recursive part.</li>
+</ul>
+</li>
+<li>So the final function could look something like this.</li>
+</ul>
+</li>
+</ul>
+<!--listend-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="nf">squareProdRec</span> <span class="ow">::</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="kt">Int</span>
+<span class="nf">squareProdRec</span> <span class="kt">[]</span>     <span class="ow">=</span> <span class="mi">1</span>
+<span class="nf">squareProdRec</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">x</span><span class="o">^</span><span class="mi">2</span> <span class="o">*</span> <span class="n">squareProdRec</span> <span class="n">xs</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>Define a function that takes a <code>String</code> argument and returns a <code>String</code> containing only the letters of the input but now all lowercase.
+<ul>
+<li>From one of my previous post I said a <code>String</code> is a <strong>Type Alias</strong> for <code>[Char]</code>. We are going to have to use this fact to answer this question.
+<ul>
+<li>We will treat the <code>String</code> as a list of <code>Char</code>, so that we can recurse over it.</li>
+</ul>
+</li>
+<li>The first thing we need to consider is the base case this will be the empty list, inputting the empty list should return the empty list.</li>
+<li>Now the recursive step, we have two cases, the <code>Char</code> is a letter and it is not a letter. We will have to use guards.
+<ul>
+<li>If the <code>Char</code> is a letter (<code>isLetter</code> returns <code>True</code>), then we apply the <code>toLower</code> function, add it to the resulting list and continue with the rest of the list until we reach the empty list, out base case.</li>
+<li>If the <code>isLetter</code> returns <code>False</code> we ignore it and continue with the rest of the list.</li>
+</ul>
+</li>
+<li>So the final function becomes</li>
+</ul>
+</li>
+</ul>
+<!--listend-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-haskell" data-lang="haskell"><span class="kr">import</span> <span class="nn">Data.Char</span>
+
+<span class="nf">lowerLetterRec</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span>  <span class="kt">String</span>
+<span class="nf">lowerLetterRec</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">[]</span>
+<span class="nf">lowerLetterRec</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="o">|</span> <span class="n">isLetter</span> <span class="n">x</span> <span class="ow">=</span> <span class="n">toLower</span> <span class="n">x</span> <span class="kt">:</span> <span class="n">lowerLetterRec</span> <span class="n">xs</span>
+                      <span class="o">|</span> <span class="n">otherwise</span>  <span class="ow">=</span>             <span class="n">lowerLetterRec</span> <span class="n">xs</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="conclusion">Conclusion</h2>
+<p>Well there you have it another way of messing with lists.
+Isn&rsquo;t recursion in Haskell great!
+In the next post we will be covering one of my favorite topics, <strong><strong>Haskell for Beginners: High Order Functions</strong></strong>.
+See you in the next post, Kyle out!</p>
+]]></description>
 </item></channel>
 </rss>
