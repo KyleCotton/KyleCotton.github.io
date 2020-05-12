@@ -1,2 +1,2 @@
 hugo;
-hugo serve -e production --disableFastRender --verbose;
+hugo serve -e production --disableFastRender --verbose --buildDrafts;
