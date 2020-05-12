@@ -3,10 +3,14 @@
 
 ## About {#about}
 
-Hi I'm Kyle Cotton a first year Computer Science & Mathematics student at the University of Edinburgh. I'm personally interested in Computer & Network Security. Here is my site.
+Hi I'm Kyle Cotton a third year Computer Science student at the University of Edinburgh. I'm personally interested in Computer & Network Security.
 
 
 ## Contact {#contact}
 
-To contact me.
+Here are the ways you can get in touch with me I prefer email though.
+
+-   Lets talk code [GitHub](https://github.com/KyleCotton)
+-   Shoot me an [Email](mailto:kylecottonkc@gmail.com)
+-   Lets IM over [Telegram](https://t.me/KyleCotton)
 
