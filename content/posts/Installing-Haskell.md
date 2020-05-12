@@ -1,7 +1,7 @@
 ---
 title: "Installing Haskell"
 date: 2019-05-25
-lastmod: 2020-05-12T18:18:15+01:00
+lastmod: 2020-05-12T19:43:21+01:00
 tags: ["Programming", "Tutorial", "Haskell"]
 categories: ["Haskell for Beginners"]
 draft: false

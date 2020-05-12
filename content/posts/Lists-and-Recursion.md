@@ -1,7 +1,7 @@
 ---
 title: "Lists and Recursion"
 date: 2019-05-30
-lastmod: 2020-05-12T18:18:16+01:00
+lastmod: 2020-05-12T19:43:22+01:00
 tags: ["Programming", "Tutorial", "Haskell"]
 categories: ["Haskell for Beginners"]
 draft: false
