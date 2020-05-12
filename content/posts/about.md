@@ -1,7 +1,7 @@
 ---
 title: "About"
 date: 2020-05-12
-lastmod: 2020-05-12T17:05:02+01:00
+lastmod: 2020-05-12T18:18:17+01:00
 tags: ["Meta"]
 draft: false
 weight: 2001

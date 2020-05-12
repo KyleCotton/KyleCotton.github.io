@@ -1,7 +1,7 @@
 ---
 title: "An Introduction to Haskell"
 date: 2019-05-24
-lastmod: 2020-05-12T17:05:01+01:00
+lastmod: 2020-05-12T18:18:15+01:00
 tags: ["Programming", "Tutorial", "Haskell"]
 categories: ["Haskell for Beginners"]
 draft: false
